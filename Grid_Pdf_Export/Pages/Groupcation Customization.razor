@@ -1,0 +1,70 @@
+﻿@page "/groupcation customization"
+@using Syncfusion.Blazor.Grids
+
+<SfGrid ID="Grid" @ref="BlazorDataGrid" DataSource="@Orders" Toolbar="@(new List<string>() { "PdfExport" })" AllowPdfExport="true" AllowGrouping="true">
+    <GridEvents PdfGroupCaptionTemplateInfo="PdfGroupCaptionHandler" OnToolbarClick="ToolbarClickHandler" TValue="Order"></GridEvents>
+    <GridGroupSettings Columns="@(new string[] { "CustomerID" })">
+        <CaptionTemplate>
+            @{
+                var order = (context as CaptionTemplateContext);
+                <div>@order?.Field - @order?.Key</div>
+            }
+        </CaptionTemplate>
+    </GridGroupSettings>
+    <GridColumns>
+        <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(Order.CustomerID) HeaderText="Customer Name" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(Order.OrderDate) HeaderText=" Order Date" Format="d" Type="ColumnType.Date" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(Order.Freight) HeaderText="Freight" Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+    private SfGrid<Order>? BlazorDataGrid;
+    public List<Order>? Orders { get; set; }
+    
+    /// <summary>
+    /// Handler to Customize the Groupcaption, when exporting to PDF.
+    /// </summary>
+    /// <param name="args"></param>
+    public void PdfGroupCaptionHandler(PdfCaptionTemplateArgs args)
+    {
+        // Here, you can customize the groupcaption cell value in pdf export.
+        args.Cell.Value = args.Key;
+    }
+
+    public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_pdfexport")  // Id is the combination of Grid's ID and item name.
+        {
+            var pdfExportProperties = new PdfExportProperties();
+            var captionTheme = new PdfTheme()
+                {
+                    Caption = new PdfThemeStyle()
+                    {
+                        FontColor = "#1E90FF"
+                    }
+                };
+            pdfExportProperties.Theme = captionTheme;
+            await this.BlazorDataGrid!.ExportToPdfAsync(pdfExportProperties);
+        }
+    }
+    protected override void OnInitialized()
+    {
+        Orders = Enumerable.Range(1, 10).Select(x => new Order()
+            {
+                OrderID = 1000 + x,
+                CustomerID = (new string[] { "ALFKI", "ANANTR", "ANTON", "BLONP", "BOLID" })[new Random().Next(5)],
+                Freight = 2.1 * x,
+                OrderDate = DateTime.Now.AddDays(-x),
+            }).ToList();
+    }
+
+    public class Order
+    {
+        public int? OrderID { get; set; }
+        public string? CustomerID { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public double? Freight { get; set; }
+    }
+}
