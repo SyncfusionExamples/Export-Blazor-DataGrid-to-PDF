@@ -52,8 +52,7 @@
         // Here, you can customize the grid column in Pdf document.
         if (args.Column?.Field == "OrderID")
         {
-            var brush = new PdfSolidBrush(System.Drawing.Color.Blue);
-            args.Style.TextBrush = brush;
+            args.Style.TextBrush = new PdfSolidBrush(System.Drawing.Color.Blue);
         }
     }
 }
