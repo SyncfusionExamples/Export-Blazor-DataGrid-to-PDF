@@ -23,15 +23,8 @@
         {
             PdfExportProperties pdfExportProperties = new PdfExportProperties();
             //Below code, defines how to do the selecting Records only, exporting in pdf 
-            var selectedRecord = await BlazorDataGrid!.GetSelectedRecordsAsync();
-            if (selectedRecord.Count() > 0)
-            {
-                pdfExportProperties.DataSource = selectedRecord;
-            }
-            else
-            {
-                pdfExportProperties.DataSource = Orders;
-            }
+            var selectedRecords = await BlazorDataGrid!.GetSelectedRecordsAsync();
+            pdfExportProperties.DataSource = selectedRecords?.Count > 0 ? selectedRecords : Orders;
             await this.BlazorDataGrid!.ExportToPdfAsync(pdfExportProperties);
         }
     }
