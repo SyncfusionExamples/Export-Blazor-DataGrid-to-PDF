@@ -80,8 +80,7 @@
     public void PdfAggregateTemplateInfoHandler(PdfAggregateEventArgs args)
     {
         // Here, you can customize the aggregate cell in pdf export document.
-        var brush = new PdfSolidBrush(System.Drawing.Color.Aqua);
-        args.Style.BackgroundBrush = brush;
+        args.Style.BackgroundBrush = new PdfSolidBrush(System.Drawing.Color.Aqua);
         if (args.Column?.Field == "Freight")
         {
             //customize the aggregate cell value here
