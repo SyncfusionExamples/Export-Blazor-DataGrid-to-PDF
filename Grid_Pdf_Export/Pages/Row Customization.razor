@@ -51,8 +51,7 @@
         // Here, you can customize the particular row in the pdf Export Documnet .
             if (args.Data?.OrderID == 1001)
             {
-                var brush = new PdfSolidBrush(System.Drawing.Color.Blue);
-                args.Style.TextBrush = brush;
+                args.Style.TextBrush = new PdfSolidBrush(System.Drawing.Color.Blue);
             }
     }
 }
